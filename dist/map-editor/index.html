@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Re-Be World Map Editor</title>
+    <link rel="stylesheet" href="editor.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <header class="header">
+            <h1>🗺️ Re-Be World Map Editor</h1>
+            <div class="header-info">
+                <span id="mapSize">맵 크기: 20x20</span>
+                <span id="selectedTile">선택된 타일: 0</span>
+            </div>
+        </header>
+
+        <!-- 메인 영역 -->
+        <div class="main-area">
+            <!-- 좌측: 타일 팔레트 -->
+            <aside class="tile-palette">
+                <h3>타일 팔레트</h3>
+                <div class="palette-search">
+                    <input type="text" id="tileSearch" placeholder="타일 번호 검색...">
+                </div>
+                <div class="palette-grid" id="paletteGrid">
+                    <!-- 타일들이 여기에 동적으로 생성됩니다 -->
+                </div>
+            </aside>
+
+            <!-- 중앙: 맵 캔버스 -->
+            <main class="canvas-area">
+                <div class="canvas-controls">
+                    <button id="zoomIn" title="확대">🔍+</button>
+                    <button id="zoomOut" title="축소">🔍-</button>
+                    <button id="zoomReset" title="리셋">100%</button>
+                    <label>
+                        <input type="checkbox" id="showGrid" checked> 그리드 표시
+                    </label>
+                    <label>
+                        <input type="checkbox" id="showNumbers"> 타일 번호 표시
+                    </label>
+                </div>
+                <div class="canvas-wrapper" id="canvasWrapper">
+                    <canvas id="mapCanvas"></canvas>
+                </div>
+            </main>
+
+            <!-- 우측: 도구 패널 -->
+            <aside class="tools-panel">
+                <h3>도구</h3>
+
+                <!-- 맵 선택 -->
+                <div class="tool-group">
+                    <h4>📍 맵 선택</h4>
+                    <select id="mapSelector"
+                        style="width: 100%; padding: 5px; background: #333; color: white; border: 1px solid #555;">
+                        <option value="world">Main World</option>
+                        <option value="tavern">Tavern (Ark)</option>
+                    </select>
+                </div>
+
+                <!-- 그리기 도구 -->
+                <div class="tool-group">
+                    <h4>🎨 브러시</h4>
+                    <div class="tool-buttons">
+                        <button class="tool-btn active" data-tool="pencil" title="펜슬 (충돌 설정)">✏️</button>
+                        <button class="tool-btn" data-tool="hand" title="손바닥 (화면 이동)">🖐️</button>
+                        <button class="tool-btn" data-tool="fill" title="영역 채우기">🪣</button>
+                        <button class="tool-btn" data-tool="eraser" title="지우개 (충돌 제거)">🧹</button>
+                        <button class="tool-btn" data-tool="inspect" title="정보 확인">🧐</button>
+                    </div>
+                </div>
+
+                <!-- 맵 설정 -->
+                <div class="tool-group">
+                    <h4>🗺️ 맵 크기</h4>
+                    <label>
+                        너비: <input type="number" id="mapWidth" value="120" min="10" max="200">
+                    </label>
+                    <label>
+                        높이: <input type="number" id="mapHeight" value="168" min="10" max="200">
+                    </label>
+                    <button id="resizeMap" class="btn-secondary">크기 변경</button>
+                </div>
+
+                <!-- 충돌 설정 -->
+                <div class="tool-group">
+                    <h4>⚠️ 충돌 타일</h4>
+                    <p class="hint">충돌할 타일 번호 (쉼표로 구분)</p>
+                    <textarea id="collisionTiles" rows="3" placeholder="80,81,82,83,192,193,194,195"></textarea>
+                    <button id="saveCollision" class="btn-secondary">충돌 설정 저장</button>
+                </div>
+
+                <!-- 액션 버튼 -->
+                <div class="tool-group">
+                    <h4>💾 파일</h4>
+                    <button id="newMap" class="btn-action">🆕 새 맵</button>
+                    <button id="saveMap" class="btn-action">💾 저장</button>
+                    <button id="resetMap" class="btn-action" style="background-color: #d9534f;">🗑️ 초기화</button>
+                    <button id="loadMap" class="btn-action">📂 불러오기</button>
+                    <button id="exportJSON" class="btn-action">📥 JSON Export</button>
+                </div>
+
+                <!-- Undo/Redo -->
+                <div class="tool-group">
+                    <h4>↩️ 실행 취소</h4>
+                    <div class="tool-buttons">
+                        <button id="undo" class="btn-secondary">↩️ Undo</button>
+                        <button id="redo" class="btn-secondary">↪️ Redo</button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- 하단: 상태바 -->
+        <footer class="status-bar">
+            <span id="statusText">준비 완료</span>
+            <span id="cursorPos">마우스: -</span>
+        </footer>
+    </div>
+
+    <!-- 숨겨진 파일 입력 -->
+    <input type="file" id="fileInput" accept=".json" style="display: none;">
+
+    <script src="editor.js"></script>
+</body>
+
+</html>
