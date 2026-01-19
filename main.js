@@ -241,6 +241,20 @@ class GameScene extends Phaser.Scene {
     init(data) {
         // StartScene에서 전달받은 캐릭터 인덱스
         this.currentCharacterIndex = data.characterIndex || 0;
+
+        // BGM 관리 (씬이 재시작되거나 다른 씬에서 돌아올 때)
+        this.events.on('wake', this.onWake, this);
+    }
+
+    onWake() {
+        // Tavern 등에서 돌아왔을 때 BGM 복구
+        const bgm = this.sound.get('bgm');
+        if (bgm) {
+            if (bgm.isPaused) bgm.resume();
+            else if (!bgm.isPlaying) bgm.play();
+
+            this.tweens.add({ targets: bgm, volume: 0.3, duration: 1000 });
+        }
     }
 
     preload() {
@@ -365,6 +379,14 @@ class GameScene extends Phaser.Scene {
 
         this.setupMultiplayer();
         socket.emit('join', { nickname: window.playerNickname || '익명' });
+
+        // BGM 확인 및 재생
+        const bgm = this.sound.get('bgm');
+        if (!bgm) {
+            this.sound.add('bgm', { loop: true, volume: 0.3 }).play();
+        } else if (!bgm.isPlaying) {
+            bgm.play({ loop: true, volume: 0.3 });
+        }
     }
 
     setupVirtualJoystick() {
