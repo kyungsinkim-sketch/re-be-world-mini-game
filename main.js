@@ -1,7 +1,9 @@
 import Phaser from 'phaser';
 import { io } from 'socket.io-client';
 
-const socket = io({
+const socket = io(window.location.hostname === 'localhost'
+    ? 'http://localhost:3000'
+    : 'https://re-be-world-game-server.onrender.com',
     reconnection: true,
     reconnectionDelay: 1000,
     reconnectionDelayMax: 5000,
