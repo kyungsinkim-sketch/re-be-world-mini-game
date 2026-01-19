@@ -1,6 +1,11 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+    publicDir: 'public', // public 폴더 명시
+    build: {
+        outDir: 'dist',
+        emptyOutDir: true
+    },
     server: {
         port: 5176,
         host: '0.0.0.0', // 외부 접속 허용

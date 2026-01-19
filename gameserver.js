@@ -8,9 +8,28 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+import fs from 'fs'; // fs 모듈 추가
+
+// ... (이전 코드)
+
 const app = express();
 const distPath = path.join(__dirname, 'dist');
 console.log(`[SERVER] Serving static files from: ${distPath}`);
+
+// 디버깅: dist 폴더 내용 확인
+try {
+    const files = fs.readdirSync(distPath);
+    console.log(`[SERVER] Files in dist: ${files.join(', ')}`);
+    if (fs.existsSync(path.join(distPath, 'assets'))) {
+        const assets = fs.readdirSync(path.join(distPath, 'assets'));
+        console.log(`[SERVER] Files in dist/assets: ${assets.slice(0, 5).join(', ')}... (total ${assets.length})`);
+    } else {
+        console.error(`[SERVER] ❌ dist/assets folder NOT found!`);
+    }
+} catch (e) {
+    console.error(`[SERVER] ❌ Error checking dist folder: ${e.message}`);
+}
+
 app.use(express.static(distPath));
 
 // 404 에러 방지를 위한 SPA 리다이렉트
