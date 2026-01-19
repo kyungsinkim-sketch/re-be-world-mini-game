@@ -14,8 +14,7 @@ console.log(`[SERVER] Serving static files from: ${distPath}`);
 app.use(express.static(distPath));
 
 // 404 에러 방지를 위한 SPA 리다이렉트
-// Express 5+ 호환성을 위해 와일드카드 문법 수정
-app.get('/(.*)', (req, res, next) => {
+app.get('*', (req, res, next) => {
     if (req.url.startsWith('/assets/')) return next();
     res.sendFile(path.join(distPath, 'index.html'), (err) => {
         if (err) next();
