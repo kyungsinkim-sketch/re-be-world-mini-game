@@ -1,10 +1,10 @@
-```javascript
+
 import Phaser from 'phaser';
 import { io } from 'socket.io-client';
 
 // Socket.io 연결 설정
-const socketUrl = window.location.hostname === 'localhost' 
-    ? 'http://localhost:3000' 
+const socketUrl = window.location.hostname === 'localhost'
+    ? 'http://localhost:3000'
     : window.location.origin;
 
 const socket = io(socketUrl, {
