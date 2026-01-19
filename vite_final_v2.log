@@ -1,0 +1,10 @@
+
+> rebeworld-game@1.0.0 dev
+> vite --port 5176 --port 5176
+
+
+  VITE v5.4.21  ready in 264 ms
+
+  ➜  Local:   http://localhost:5176/
+  ➜  Network: http://192.168.219.103:5176/
+  ➜  press h + enter to show help

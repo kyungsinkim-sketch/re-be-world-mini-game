@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tileset Test</title>
+</head>
+
+<body>
+    <h1>Tileset Loading Test</h1>
+    <div id="status">Loading...</div>
+    <br>
+    <img id="testImage" style="border: 2px solid black;">
+    <br>
+    <canvas id="testCanvas" style="border: 2px solid red;"></canvas>
+
+    <script>
+        const img = new Image();
+        const testImg = document.getElementById('testImage');
+        const canvas = document.getElementById('testCanvas');
+        const ctx = canvas.getContext('2d');
+        const status = document.getElementById('status');
+
+        img.onload = () => {
+            status.innerHTML = `✅ Image loaded! Size: ${img.width}x${img.height}<br>`;
+            status.innerHTML += `Natural size: ${img.naturalWidth}x${img.naturalHeight}`;
+
+            testImg.src = img.src;
+            testImg.width = 256;
+
+            // Draw first tile
+            canvas.width = 64;
+            canvas.height = 64;
+            ctx.drawImage(img, 0, 0, 64, 64, 0, 0, 64, 64);
+        };
+
+        img.onerror = () => {
+            status.innerHTML = '❌ Failed to load image!';
+        };
+
+        img.src = 'New_Tileset.png';
+        console.log('Attempting to load:', img.src);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+{
+    "name": "rebeworld-game",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite --port 5176",
+        "build": "vite build"
+    },
+    "dependencies": {
+        "express": "^5.2.1",
+        "phaser": "^3.80.1",
+        "socket.io": "^4.8.3",
+        "socket.io-client": "^4.8.3"
+    },
+    "devDependencies": {
+        "http-proxy-middleware": "^3.0.5",
+        "vite": "^5.0.0"
+    }
+}

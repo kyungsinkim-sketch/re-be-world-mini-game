@@ -1,0 +1,10 @@
+
+> rebeworld-game@1.0.0 dev
+> vite --port 5175
+
+
+  VITE v5.4.21  ready in 814 ms
+
+  ➜  Local:   http://localhost:5175/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
