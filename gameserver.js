@@ -9,7 +9,18 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(express.static(path.join(__dirname, 'dist')));
+const distPath = path.join(__dirname, 'dist');
+console.log(`[SERVER] Serving static files from: ${distPath}`);
+app.use(express.static(distPath));
+
+// 404 에러 방지를 위한 SPA 리다이렉트 (선택사항)
+app.get('*', (req, res, next) => {
+    if (req.url.startsWith('/assets/')) return next();
+    res.sendFile(path.join(distPath, 'index.html'), (err) => {
+        if (err) next();
+    });
+});
+
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
@@ -94,7 +105,7 @@ io.on('connection', (socket) => {
                 message = messageData.message;
                 scene = messageData.scene || player.scene;
             }
-            
+
             io.emit('chatMessage', {
                 id: socket.id,
                 nickname: player.nickname,
