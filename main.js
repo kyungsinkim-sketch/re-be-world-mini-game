@@ -1221,9 +1221,32 @@ class TavernScene extends Phaser.Scene {
         if (this.socket) {
             console.log('[TavernScene] Setting up multiplayer, socket ID:', this.socket.id);
 
-            // Join again with Tavern scene context
-            this.socket.emit('join', { nickname: this.nickname });
-            console.log('[TavernScene] Emitted join event');
+            // 중요: join을 다시 보내면 서버에서 scene이 GameScene으로 초기화되므로 보내지 않음
+            // 대신 즉시 위치와 씬 정보를 업데이트하여 서버에 알림
+            this.socket.emit('playerMovement', {
+                x: Math.floor(this.player.x),
+                y: Math.floor(this.player.y),
+                animation: 'idle',
+                scene: 'TavernScene'
+            });
+            console.log('[TavernScene] Emitted initial movement to update scene context');
+
+            // 리스너 초기화 (중복 방지)
+            this.socket.off('currentPlayers');
+            this.socket.off('newPlayer');
+            this.socket.off('playerMoved');
+            this.socket.off('playerDisconnected');
+            this.socket.off('chatMessage');
+
+            // 현재 접속자 요청 (기존 플레이어 목록만 받아옴)
+            // 서버가 별도의 getPlayers 이벤트를 지원하지 않는다면, 
+            // join 없이도 브로드캐스트를 듣거나, 혹은 클라이언트에서 관리해야 함.
+            // 하지만 현재 구조상 join 외에 전체 리스트를 받는 방법이 없다면,
+            // 불가피하게 join을 쓰되 서버 로직을 고치거나, 
+            // 여기서는 'playerMovement'로 내 위치만 알리고 다른 사람들은 나중에 들어오는 신호로 파악.
+            // (가장 깔끔한 건: 서버가 join 시 scene을 덮어쓰지 않거나, scene을 파라미터로 받는 것)
+
+            // 임시 해결: 내 씬 상태를 강제로 업데이트하기 위해 movement를 반복 전송
 
             this.socket.on('currentPlayers', (players) => {
                 console.log('[TavernScene] Received currentPlayers:', players.length);
