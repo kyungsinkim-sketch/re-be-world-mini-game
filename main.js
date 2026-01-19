@@ -1,9 +1,13 @@
+```javascript
 import Phaser from 'phaser';
 import { io } from 'socket.io-client';
 
-const socket = io(window.location.hostname === 'localhost'
-    ? 'http://localhost:3000'
-    : 'https://re-be-world-game-server.onrender.com',
+// Socket.io 연결 설정
+const socketUrl = window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000' 
+    : window.location.origin;
+
+const socket = io(socketUrl, {
     reconnection: true,
     reconnectionDelay: 1000,
     reconnectionDelayMax: 5000,
