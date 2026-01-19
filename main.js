@@ -49,6 +49,7 @@ class StartScene extends Phaser.Scene {
 
         // 배경 음악 로드
         this.load.audio('lobbyMusic', '/assets/audio/lobby.mp3');
+        this.load.audio('bgm', '/assets/audio/bgm.mp3');
     }
 
     create() {
@@ -57,16 +58,18 @@ class StartScene extends Phaser.Scene {
         const centerX = width / 2;
         const centerY = height / 2;
 
-        // 배경 음악
-        if (!this.sound.get('lobbyMusic')) {
-            this.lobbyMusic = this.sound.add('lobbyMusic', { loop: true, volume: 0.4 });
-            if (!this.sound.locked) {
-                this.lobbyMusic.play();
-            } else {
-                this.sound.once('unlocked', () => {
+        // 배경 음악 설정 (Autoplay 정책 대응)
+        this.lobbyMusic = this.sound.add('lobbyMusic', { loop: true, volume: 0.4 });
+
+        // 브라우저의 AudioContext가 잠겨있다면 첫 클릭 시 재생
+        if (this.sound.locked) {
+            this.input.once('pointerdown', () => {
+                if (!this.lobbyMusic.isPlaying) {
                     this.lobbyMusic.play();
-                });
-            }
+                }
+            });
+        } else {
+            this.lobbyMusic.play();
         }
 
         // 배경 이미지 설정
@@ -179,9 +182,8 @@ class StartScene extends Phaser.Scene {
         this.startButton.on('pointerdown', () => {
             const nickname = this.playerNickname || '익명';
             if (this.lobbyMusic) this.lobbyMusic.stop();
-            if (this.cache.audio.exists('bgm')) {
-                this.sound.add('bgm', { loop: true, volume: 0.3 }).play();
-            }
+            // bgm 재생
+            this.sound.add('bgm', { loop: true, volume: 0.3 }).play();
             document.body.removeChild(this.nicknameInput);
             window.playerNickname = nickname;
             this.scene.start('GameScene', { characterIndex: this.selectedCharacterIndex, nickname });
